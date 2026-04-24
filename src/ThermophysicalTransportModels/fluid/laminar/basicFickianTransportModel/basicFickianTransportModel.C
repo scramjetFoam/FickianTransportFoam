@@ -76,13 +76,7 @@ basicFickianTransportModel<BasicThermophysicalTransportModel>::basicFickianTrans
     
     Le_(this->thermo().species().size())
     
-{
-    if(this->thermo().he().name() == "e") {
-        FatalErrorInFunction
-            << "Internal energy is not supported as a solution variable. Please use enthalpy instead."
-            << exit(FatalError);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -178,6 +172,17 @@ bool basicFickianTransportModel<BasicThermophysicalTransportModel>::read()
         }
         
 	implicitFlux_ = this->coeffDict().lookupOrDefault("implicitHeatFlux",true);
+
+	if (implicitFlux_ && this->thermo().he().name() == "e")
+	{
+	    WarningInFunction
+	        << "The implicit heat-flux formulation is derived from "
+	           "dh_s = c_p dT and is not strictly consistent with the "
+	           "sensible internal energy equation. Falling back to the "
+	           "explicit formulation (implicitHeatFlux false)." << endl;
+	    implicitFlux_ = false;
+	}
+
 	Info << "Selecting "<< (implicitFlux_ ? "implicit" : "explicit") << " formulation for the heat flux" << endl;
 	
         return true;
