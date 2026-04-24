@@ -76,13 +76,7 @@ basicFickianTransportModel<BasicThermophysicalTransportModel>::basicFickianTrans
     
     Le_(this->thermo().species().size())
     
-{
-    if(this->thermo().he().name() == "e") {
-        FatalErrorInFunction
-            << "Internal energy is not supported as a solution variable. Please use enthalpy instead."
-            << exit(FatalError);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -226,7 +220,7 @@ tmp<surfaceScalarField> basicFickianTransportModel<BasicThermophysicalTransportM
         forAll(Y, i)
         {
 
-                const volScalarField hi(this->thermo().hsi(i, p, T));
+                const volScalarField hi(this->thermo().hei(i, p, T));
 
                 const surfaceScalarField ji(BasicThermophysicalTransportModel::j(Y[i]));
                 sumJh += ji*fvc::interpolate(hi);
@@ -284,7 +278,7 @@ tmp<fvScalarMatrix> basicFickianTransportModel<BasicThermophysicalTransportModel
      forAll(Y, i)
      {
 
-             const volScalarField hi(this->thermo().hsi(i, p, T));
+             const volScalarField hi(this->thermo().hei(i, p, T));
  
              const surfaceScalarField ji(BasicThermophysicalTransportModel::j(Y[i]));
  

@@ -119,7 +119,7 @@ laminar
 Note that since OpenFOAM 13, this implementation [was included](https://github.com/OpenFOAM/OpenFOAM-dev/commit/f9139b7a2cc053f0196fa569f9018405a1dd810b) in the release with a slightly different name and input dictionary format.
  
 > [!IMPORTANT]
-> Only the sensible enthalpy formulation is supported currently and the energy equation should not be solved for internal energy.
+> On OpenFOAM-dev, both the sensible enthalpy (`sensibleEnthalpy`) and the sensible internal energy (`sensibleInternalEnergy`) formulations are supported for the energy equation. On older releases that only provide `hsi` (e.g. OpenFOAM 10, 11) only the sensible enthalpy formulation is supported.
 
 
 ## Citation
