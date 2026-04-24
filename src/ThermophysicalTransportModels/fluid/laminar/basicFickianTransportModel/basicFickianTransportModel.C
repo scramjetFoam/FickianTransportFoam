@@ -172,6 +172,17 @@ bool basicFickianTransportModel<BasicThermophysicalTransportModel>::read()
         }
         
 	implicitFlux_ = this->coeffDict().lookupOrDefault("implicitHeatFlux",true);
+
+	if (implicitFlux_ && this->thermo().he().name() == "e")
+	{
+	    WarningInFunction
+	        << "The implicit heat-flux formulation is derived from "
+	           "dh_s = c_p dT and is not strictly consistent with the "
+	           "sensible internal energy equation. Falling back to the "
+	           "explicit formulation (implicitHeatFlux false)." << endl;
+	    implicitFlux_ = false;
+	}
+
 	Info << "Selecting "<< (implicitFlux_ ? "implicit" : "explicit") << " formulation for the heat flux" << endl;
 	
         return true;
@@ -220,7 +231,7 @@ tmp<surfaceScalarField> basicFickianTransportModel<BasicThermophysicalTransportM
         forAll(Y, i)
         {
 
-                const volScalarField hi(this->thermo().hei(i, p, T));
+                const volScalarField hi(this->thermo().hsi(i, p, T));
 
                 const surfaceScalarField ji(BasicThermophysicalTransportModel::j(Y[i]));
                 sumJh += ji*fvc::interpolate(hi);
@@ -278,7 +289,7 @@ tmp<fvScalarMatrix> basicFickianTransportModel<BasicThermophysicalTransportModel
      forAll(Y, i)
      {
 
-             const volScalarField hi(this->thermo().hei(i, p, T));
+             const volScalarField hi(this->thermo().hsi(i, p, T));
  
              const surfaceScalarField ji(BasicThermophysicalTransportModel::j(Y[i]));
  
